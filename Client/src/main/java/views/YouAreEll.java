@@ -6,8 +6,11 @@ import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
+import models.Id;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class YouAreEll {
 
@@ -19,6 +22,8 @@ public class YouAreEll {
         this.msgCtrl = m;
         this.idCtrl = j;
     }
+
+
 
     public static void main(String[] args) {
         // hmm: is this Dependency Injection?
@@ -36,31 +41,15 @@ public class YouAreEll {
     }
 
     public String MakeURLCall(String mainurl, String method, String jpayload) {
-
-        Unirest.config().setObjectMapper(new ObjectMapper() {
-            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-
-            public String writeValue(Object value) {
-                try {
-                    return mapper.writeValueAsString(value);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            public <T> T readValue(String value, Class<T> valueType) {
-                try {
-                    return mapper.readValue(value, valueType);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        });
-
-        HttpResponse<JsonNode> response = Unirest.get("http://zipcode.rocks:8085"+mainurl).asJson();
-
-        return response.getBody().toString();
+        TransactionController tc = new TransactionController();
+        try {
+            tc.makeObjectMap(mainurl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Stream<Id> ids = tc.getIds().stream();
+        StringBuilder sb = new StringBuilder();
+        ids.map(Id::getGithubId).forEach(foo -> sb.append(foo + " "));
+        return sb.toString();
     }
 }

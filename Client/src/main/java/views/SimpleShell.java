@@ -73,12 +73,20 @@ public class SimpleShell {
                 }
 
                 // messages
-                if (list.contains("messages")) {
+                if (list.contains("messages") && list.size() == 1) {
+
+                } if (list.contains("messages")) {
                     String results = webber.get_messages();
                     SimpleShell.prettyPrint(results);
                     continue;
                 }
                 // you need to add a bunch more.
+                if (list.contains("send") && list.contains("to")) {
+                    //do stuff
+                }
+                if (list.contains("send")) {
+                    //do stuff
+                }
 
                 //!! command returns the last command in history
                 if (list.get(list.size() - 1).equals("!!")) {

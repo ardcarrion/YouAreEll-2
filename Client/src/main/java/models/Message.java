@@ -5,6 +5,14 @@ package models;
  */
 public class Message {
 
-    public Message (String message, String fromId, String toId) {}
+    private String message;
+    private String fromId;
+    private String toId;
+
+    public Message (String message, String fromId, String toId) {
+        this.message = message;
+        this.fromId = fromId;
+        this.toId = toId;
+    }
 
 }
