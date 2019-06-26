@@ -9,12 +9,19 @@ import kong.unirest.JsonNode;
 import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
 import models.Id;
+import models.Message;
 
 import java.io.IOException;
 import java.util.List;
 
 public class TransactionController {
     private String rootURL = "http://zipcode.rocks:8085";
+
+    public List<Message> getListMessage() {
+        return listMessage;
+    }
+
+    private List<Message> listMessage;
 
     public List<Id> getIds() {
         return ids;
@@ -72,9 +79,17 @@ public class TransactionController {
             }
         });
 
+        if (mainurl.equals("/ids")) {
 
-        TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>(){};
-        List<Id> listId = mapper.readValue(response.getBody().toString(), typeReference);
-        this.ids = listId;
+            TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>() {
+            };
+            List<Id> listId = mapper.readValue(response.getBody().toString(), typeReference);
+            this.ids = listId;
+        } else {
+            TypeReference<List<Message>> typeReference = new TypeReference<List<Message>>() {};
+            List<Message> listMessage = mapper.readValue(response.getBody().toString(), typeReference);
+            this.listMessage = listMessage;
+        }
+
     }
 }

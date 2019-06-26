@@ -7,6 +7,7 @@ import kong.unirest.JsonNode;
 import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
 import models.Id;
+import models.Message;
 
 import java.io.IOException;
 import java.util.List;
@@ -47,9 +48,14 @@ public class YouAreEll {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Stream<Id> ids = tc.getIds().stream();
         StringBuilder sb = new StringBuilder();
-        ids.map(Id::getGithubId).forEach(foo -> sb.append(foo + " "));
+        if (mainurl.equals("/ids")) {
+            Stream<Id> ids = tc.getIds().stream();
+            ids.map(Id::getGithubId).forEach(foo -> sb.append(foo + " "));
+        } else {
+            Stream<Message> messages = tc.getListMessage().stream();
+            messages.map(Message::getMessage).forEach(bar -> sb.append(bar + "\n"));
+        }
         return sb.toString();
     }
 }
