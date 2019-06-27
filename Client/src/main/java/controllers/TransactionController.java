@@ -28,13 +28,15 @@ public class TransactionController {
     }
 
     private List<Id> ids;
+    private com.fasterxml.jackson.databind.ObjectMapper mapper;
 
     public TransactionController() {
+        this.mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+        makeObjectMap();
     }
 
-    public void makeObjectMap(String mainurl) throws IOException {
-        HttpResponse<JsonNode> response = Unirest.get(rootURL+mainurl).asJson();
-        com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+    public void makeObjectMap() {
+
         Unirest.config().setObjectMapper(new ObjectMapper() {
             public String writeValue(Object value) {
                 try {
@@ -54,16 +56,28 @@ public class TransactionController {
                 return null;
             }
         });
+    }
 
+    public void getResponse(String mainurl) throws IOException {
+        HttpResponse<JsonNode> response = Unirest.get(rootURL+mainurl).asJson();
         if (mainurl.equals("/ids")) {
-
-            TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>() {
-            };
+            postResponse("/ids");
+            TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>() {};
             this.ids = mapper.readValue(response.getBody().toString(), typeReference);
         } else {
             TypeReference<List<Message>> typeReference = new TypeReference<List<Message>>() {};
             this.listMessage = mapper.readValue(response.getBody().toString(), typeReference);
         }
+    }
+
+    public void postResponse(String mainurl) throws IOException {
+        Id id = new Id("-", "Silly rabbit", "tricksareforkids");
+        String jsonStr = mapper.writeValueAsString(id);
+        Unirest.post(rootURL+mainurl).body(jsonStr).asJson();
+    }
+
+    public void putResponse() throws IOException {
+        getResponse("/ids");
 
     }
 }

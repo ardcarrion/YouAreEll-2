@@ -7,11 +7,17 @@ import models.Id;
 
 public class IdController {
     Id myId;
+    private TransactionController tc;
+
+    public IdController() {
+        this.myId = new Id("-", "Foo", "foobar2");
+        this.tc = new TransactionController();
+    }
 
     public ArrayList<Id> getIds() {
-        TransactionController tc = new TransactionController();
+
         try {
-            tc.makeObjectMap("/ids");
+            tc.getResponse("/ids");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -19,7 +25,12 @@ public class IdController {
     }
 
     public Id postId(Id id) {
-        return null;
+        try {
+            tc.postResponse("/ids");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return this.myId;
     }
 
     public Id putId(Id id) {

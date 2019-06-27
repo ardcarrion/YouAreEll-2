@@ -1,9 +1,6 @@
 package models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 /*
  * POJO for an Id object
@@ -15,22 +12,34 @@ public class Id {
     }
 
     public String getGithubId() {
-        return githubId;
+        return github;
     }
 
     private String name;
-    private  String githubId;
-    private String userId;
+    private  String github;
 
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGithub() {
+        return github;
+    }
+
+    public void setGithub(String github) {
+        this.github = github;
+    }
 
     @JsonCreator
     public Id(
-            @JsonProperty("github") String githubId,
-            @JsonProperty("name") String name,
-            @JsonProperty("userid") String userId) {
+            @JsonSetter("userid") String userid,
+            @JsonSetter("name") String name,
+            @JsonSetter("github") String github)
+    {
         this.name = name;
-        this.githubId = githubId;
-        this.userId = userId;
+        this.github = github;
+
     }
 
 

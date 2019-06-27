@@ -18,7 +18,7 @@ public class MessageController {
     public ArrayList<Message> getMessages() {
         TransactionController tc = new TransactionController();
         try {
-            tc.makeObjectMap("/messages");
+            tc.getResponse("/messages");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,7 +26,13 @@ public class MessageController {
     }
 
     public ArrayList<Message> getMessagesForId(Id Id) {
-        return null;
+        TransactionController tc = new TransactionController();
+        try {
+            tc.getResponse("/" + Id.getGithubId() + "/messages");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(tc.getListMessage());
     }
     public Message getMessageForSequence(String seq) {
         return null;

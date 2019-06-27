@@ -40,4 +40,16 @@ public class Message {
     public String getToId() {
         return toId;
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setFromId(String fromId) {
+        this.fromId = fromId;
+    }
+
+    public void setToId(String toId) {
+        this.toId = toId;
+    }
 }

@@ -4,10 +4,13 @@ import models.Id;
 
 public class IdTextView {
 
-    public IdTextView(Id idToDisplay) {
+    private Id id;
 
+    public IdTextView(Id idToDisplay) {
+        this.id = idToDisplay;
     }
+
     @Override public String toString() {
-        return null;
+        return id.getGithubId();
     } 
 }
