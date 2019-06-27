@@ -32,30 +32,6 @@ public class TransactionController {
     public TransactionController() {
     }
 
-//    private void makeObjectMap() {
-//        Unirest.config().setObjectMapper(new ObjectMapper() {
-//            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
-//
-//            public String writeValue(Object value) {
-//                try {
-//                    return mapper.writeValueAsString(value);
-//                } catch (JsonProcessingException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//
-//            public <T> T readValue(String value, Class<T> valueType) {
-//                try {
-//                    return mapper.readValue(value, valueType);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                return null;
-//            }
-//        });
-//    }
-
     public void makeObjectMap(String mainurl) throws IOException {
         HttpResponse<JsonNode> response = Unirest.get(rootURL+mainurl).asJson();
         com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
@@ -83,12 +59,10 @@ public class TransactionController {
 
             TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>() {
             };
-            List<Id> listId = mapper.readValue(response.getBody().toString(), typeReference);
-            this.ids = listId;
+            this.ids = mapper.readValue(response.getBody().toString(), typeReference);
         } else {
             TypeReference<List<Message>> typeReference = new TypeReference<List<Message>>() {};
-            List<Message> listMessage = mapper.readValue(response.getBody().toString(), typeReference);
-            this.listMessage = listMessage;
+            this.listMessage = mapper.readValue(response.getBody().toString(), typeReference);
         }
 
     }

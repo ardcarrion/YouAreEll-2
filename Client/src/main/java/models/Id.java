@@ -21,7 +21,7 @@ public class Id {
     private String name;
     private  String githubId;
     private String userId;
-    
+
 
     @JsonCreator
     public Id(

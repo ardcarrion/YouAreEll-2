@@ -42,20 +42,29 @@ public class YouAreEll {
     }
 
     public String MakeURLCall(String mainurl, String method, String jpayload) {
-        TransactionController tc = new TransactionController();
-        try {
-            tc.makeObjectMap(mainurl);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        TransactionController tc = new TransactionController();
+//        try {
+//            tc.makeObjectMap(mainurl);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        StringBuilder sb = new StringBuilder();
+//        if (mainurl.equals("/ids")) {
+//            Stream<Id> ids = tc.getIds().stream();
+//            ids.map(Id::getGithubId).forEach(foo -> sb.append(foo + " "));
+//        } else {
+//            Stream<Message> messages = tc.getListMessage().stream();
+//            messages.map(Message::getMessage).forEach(bar -> sb.append(bar + "\n"));
+//        }
+//        return sb.toString();
         StringBuilder sb = new StringBuilder();
-        if (mainurl.equals("/ids")) {
-            Stream<Id> ids = tc.getIds().stream();
-            ids.map(Id::getGithubId).forEach(foo -> sb.append(foo + " "));
-        } else {
-            Stream<Message> messages = tc.getListMessage().stream();
-            messages.map(Message::getMessage).forEach(bar -> sb.append(bar + "\n"));
-        }
+        if (mainurl.equals("/messages")) msgCtrl.getMessages()
+                                                .stream()
+                                                .map(Message::getMessage)
+                                                .forEach(str->sb.append(str + "\n"));
+        else if (mainurl.equals("/ids")) idCtrl.getIds().stream()
+                                                .map(Id::getGithubId)
+                                                .forEach(str -> sb.append(str + " "));
         return sb.toString();
     }
 }
