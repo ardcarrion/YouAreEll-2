@@ -29,6 +29,14 @@ public class Message {
         this.timeStamp = timestamp;
     }
 
+    public Message(String fromId, String toId, String message) {
+        this("-", "-", fromId, toId, message);
+    }
+
+    public Message(String fromId, String message) {
+        this("-", "-", fromId, "", message);
+    }
+
     public String getMessage() {
         return message;
     }

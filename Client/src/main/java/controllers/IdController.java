@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import models.Id;
+import views.SimpleShell;
 
 import static java.util.stream.Collectors.toList;
 
@@ -30,16 +31,16 @@ public class IdController {
     }
 
     public Id postId(Id newId) {
-        String name = newId.getName();
         Id foundId = findId(newId.getGithub());
         if (foundId != null) {
-            foundId.setName(name);
-            return putId(foundId);
-        }
-        try {
-            tc.postResponse("/ids", newId);
-        } catch (IOException e) {
-            e.printStackTrace();
+            foundId.setName(newId.getName());
+            putId(foundId);
+        } else {
+            try {
+                tc.postResponse("/ids", newId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return newId;
     }
@@ -55,6 +56,7 @@ public class IdController {
     }
 
     public Id putId(Id id) {
+        SimpleShell.logger.fine("reached putId");
         try {
             tc.putResponse("/ids", id);
         } catch (IOException e) {

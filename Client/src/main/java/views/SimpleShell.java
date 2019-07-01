@@ -4,8 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import controllers.IdController;
 import controllers.MessageController;
@@ -15,12 +20,27 @@ import youareell.YouAreEll;
 
 // Simple Shell is a Console view for youareell.YouAreEll.
 public class SimpleShell {
-
+    public static Logger logger;
 
     public static void prettyPrint(String output) {
         // yep, make an effort to format things nicely, eh?
         System.out.println(output);
     }
+    public static void prettyPrint(ArrayList<Message> messages) {
+        // yep, make an effort to format things nicely, eh?
+        messages.stream().limit(20).map(message -> new MessageTextView(message).toString()).forEach(System.out::println);
+    }
+
+    public static void initLogger(boolean logStart) {
+        if (logStart) {
+            logger = Logger.getLogger("/Users/aliciacarrion/dev/YouAreEll-2/Client/src/main/java/views/SimpleShell.java");
+            ConsoleHandler handler = new ConsoleHandler();
+            handler.setLevel(Level.ALL);
+            logger.addHandler(handler);
+            logger.setLevel(Level.FINEST);
+        }
+    }
+
     public static void main(String[] args) throws java.io.IOException {
 
         YouAreEll webber = new YouAreEll(new MessageController(), new IdController());
@@ -34,6 +54,8 @@ public class SimpleShell {
         int index = 0;
         //we break out with <ctrl c>
         while (true) {
+            initLogger(true);
+            logger.fine("started parsing");
             //read what the user enters
             System.out.println("cmd? ");
             commandLine = console.readLine();
@@ -89,25 +111,38 @@ public class SimpleShell {
                     SimpleShell.prettyPrint(results);
                     continue;
                 } if (list.contains("messages") && list.size() == 2) {
-
+                    IdController j = new IdController();
+                    Id foundId = j.findId(list.get(1));
+                    if (foundId == null) continue;
+                    MessageController m = new MessageController();
+                    SimpleShell.prettyPrint(m.getMessagesForId(foundId));
+                    continue;
                 }
                 // you need to add a bunch more.
                 if (list.contains("send") && list.contains("to")) {
                     if (list.size() != 5) continue;
                     MessageController m = new MessageController();
                     IdController j = new IdController();
-                    Id toId = j.findId(list.get(1));
-                    Id fromId = j.findId(list.get(3));
-                    Message msg = new Message("-", "-", list.get(1), list.get(3), list.get(2));
-
+                    Id toId = j.findId(list.get(4));
+                    Id fromId = j.findId(list.get(1));
+                    if (fromId == null | toId == null) continue;
+                    String message = list.get(2);
+                    Message msg = new Message(fromId.getGithub(), toId.getGithub(), message);
+                    m.postMessage(fromId, msg);
+                    SimpleShell.prettyPrint("message posted");
+                    continue;
                 }
                 if (list.contains("send")) {
                     MessageController m = new MessageController();
-
-                    Message msg = new Message("-", "-", list.get(1), list.get(3), list.get(4));
-                    Id toId = new Id("-", "", "");
-                    Id fromId = new Id ("-", "", "");
-                    m.postMessage(toId, fromId, msg);
+                    IdController j = new IdController();
+                    String from = list.get(1);
+                    Id fromId = j.findId(from);
+                    if (fromId == null) continue;
+                    String message = list.get(2);
+                    Message msg = new Message(fromId.getGithub(), message);
+                    m.postMessage(fromId, msg);
+                    SimpleShell.prettyPrint("message posted");
+                    continue;
                     //do stuff
                 }
 

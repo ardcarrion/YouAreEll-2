@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import models.Id;
 import models.Message;
+import views.SimpleShell;
 
 public class MessageController {
 
@@ -31,7 +32,7 @@ public class MessageController {
 
     public ArrayList<Message> getMessagesForId(Id Id) {
         try {
-            tc.getResponse("/" + Id.getGithubId() + "/messages");
+            tc.getResponse("/ids/" + Id.getGithub() + "/messages");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,30 +50,23 @@ public class MessageController {
 
     public ArrayList<Message> getMessagesFromFriend(Id myId, Id friendId) {
         try {
-            tc.getResponse("/" + myId.getGithubId() + "/messages/" + friendId.getGithubId());
+            tc.getResponse("/" + myId.getGithub() + "/messages/" + friendId.getGithub());
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new ArrayList<>(tc.getListMessage());
     }
 
-    public Message postMessage(Id myId, Id toId, Message msg) {
 
-        try {
-            tc.postResponse("/" + myId.getGithubId() + "/messages/" + toId.getGithubId(), msg);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return msg;
-    }
 
     public Message postMessage(Id myId, Message msg) {
 
         try {
-            tc.postResponse("/" + myId.getGithubId() + "/message", msg);
+            tc.postResponse("/ids/" + myId.getGithub() + "/messages", msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return msg;
     }
+
 }

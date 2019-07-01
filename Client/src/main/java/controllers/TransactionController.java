@@ -10,11 +10,14 @@ import kong.unirest.ObjectMapper;
 import kong.unirest.Unirest;
 import models.Id;
 import models.Message;
+import views.SimpleShell;
 
 import java.io.IOException;
 import java.util.List;
 
+
 public class TransactionController {
+
     private String rootURL = "http://zipcode.rocks:8085";
 
     public List<Message> getListMessage() {
@@ -76,12 +79,13 @@ public class TransactionController {
 
     public void postResponse(String mainurl, Message message) throws IOException {
         String jsonStr = mapper.writeValueAsString(message);
+        SimpleShell.logger.fine(jsonStr);
         Unirest.post(rootURL+mainurl).body(jsonStr).asJson();
 
     }
 
     public void putResponse(String mainurl, Id id) throws IOException {
         String jsonStr = mapper.writeValueAsString(id);
-        HttpResponse<JsonNode> response = Unirest.put(rootURL + mainurl).body(jsonStr).asJson();
+        Unirest.put(rootURL + mainurl).body(jsonStr).asJson();
     }
 }

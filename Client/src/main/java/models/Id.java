@@ -11,13 +11,30 @@ public class Id {
         return name;
     }
 
-    public String getGithubId() {
-        return github;
-    }
 
     private String name;
-    private  String github;
+    private String github;
+    private String userId;
 
+    @JsonCreator
+    public Id(
+            @JsonProperty("userid") String userid,
+            @JsonProperty("name") String name,
+            @JsonProperty("github") String github)
+    {
+        this.name = name;
+        this.github = github;
+        this.userId = userid;
+
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -31,23 +48,11 @@ public class Id {
         this.github = github;
     }
 
-    @JsonCreator
-    public Id(
-            @JsonSetter("userid") String userid,
-            @JsonSetter("name") String name,
-            @JsonSetter("github") String github)
-    {
-        this.name = name;
-        this.github = github;
-
+    @Override
+    public String toString() {
+        return "Id{" +
+                "name='" + name + '\'' +
+                ", github='" + github + '\'' +
+                '}';
     }
-
-//
-//    @Override
-//    public String toString() {
-//        return "Id{" +
-//                "name='" + name + '\'' +
-//                ", github='" + github + '\'' +
-//                '}';
-//    }
 }
