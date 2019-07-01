@@ -30,7 +30,7 @@ public class Message {
     }
 
     public String getMessage() {
-        return fromId + " " + toId + " " + message;
+        return message;
     }
 
     public String getFromId() {

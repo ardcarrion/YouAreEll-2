@@ -11,6 +11,6 @@ public class IdTextView {
     }
 
     @Override public String toString() {
-        return id.getGithubId();
+        return "\n" + id.getName() + " " + id.getGithubId() ;
     } 
 }

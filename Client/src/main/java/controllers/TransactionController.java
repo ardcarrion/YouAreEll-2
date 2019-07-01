@@ -61,7 +61,6 @@ public class TransactionController {
     public void getResponse(String mainurl) throws IOException {
         HttpResponse<JsonNode> response = Unirest.get(rootURL+mainurl).asJson();
         if (mainurl.equals("/ids")) {
-            postResponse("/ids");
             TypeReference<List<Id>> typeReference = new TypeReference<List<Id>>() {};
             this.ids = mapper.readValue(response.getBody().toString(), typeReference);
         } else {
@@ -70,14 +69,19 @@ public class TransactionController {
         }
     }
 
-    public void postResponse(String mainurl) throws IOException {
-        Id id = new Id("-", "Silly rabbit", "tricksareforkids");
+    public void postResponse(String mainurl, Id id) throws IOException {
         String jsonStr = mapper.writeValueAsString(id);
         Unirest.post(rootURL+mainurl).body(jsonStr).asJson();
     }
 
-    public void putResponse() throws IOException {
-        getResponse("/ids");
+    public void postResponse(String mainurl, Message message) throws IOException {
+        String jsonStr = mapper.writeValueAsString(message);
+        Unirest.post(rootURL+mainurl).body(jsonStr).asJson();
 
+    }
+
+    public void putResponse(String mainurl, Id id) throws IOException {
+        String jsonStr = mapper.writeValueAsString(id);
+        HttpResponse<JsonNode> response = Unirest.put(rootURL + mainurl).body(jsonStr).asJson();
     }
 }

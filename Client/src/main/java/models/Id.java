@@ -42,5 +42,12 @@ public class Id {
 
     }
 
-
+//
+//    @Override
+//    public String toString() {
+//        return "Id{" +
+//                "name='" + name + '\'' +
+//                ", github='" + github + '\'' +
+//                '}';
+//    }
 }

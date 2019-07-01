@@ -1,8 +1,8 @@
-package views;
+package youareell;
 
 import controllers.*;
-import models.Id;
-import models.Message;
+import views.IdTextView;
+import views.MessageTextView;
 
 
 public class YouAreEll {
@@ -33,16 +33,24 @@ public class YouAreEll {
         return MakeURLCall("/messages", "GET", "");
     }
 
+    public String get_messages(IdTextView fromId, IdTextView toId) {
+        String mainurl = "/ids/" + fromId.toString() + "/messages/" + toId.toString();
+        return MakeURLCall(mainurl, "GET", "");
+    }
+
+    public void send_messages(MessageTextView message) {
+
+    }
+
     public String MakeURLCall(String mainurl, String method, String jpayload) {
         StringBuilder sb = new StringBuilder();
         if (mainurl.equals("/messages")) msgCtrl.getMessages()
                                                 .stream()
-                                                .map(Message::getMessage)
-                                                .forEach(str->sb.append(str + "\n"));
+                                                .map(MessageTextView::new)
+                                                .forEach(msg ->sb.append(msg.toString()));
         else if (mainurl.equals("/ids")) idCtrl.getIds().stream()
-                                                .map(Id::getGithubId)
-                                                .forEach(str -> sb.append(str + " "));
+                                                .map(IdTextView::new)
+                                                .forEach(id -> sb.append(id.toString() + " "));
         return sb.toString();
-//        return "";
     }
 }

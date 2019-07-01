@@ -9,8 +9,11 @@ import java.util.List;
 
 import controllers.IdController;
 import controllers.MessageController;
+import models.Id;
+import models.Message;
+import youareell.YouAreEll;
 
-// Simple Shell is a Console view for views.YouAreEll.
+// Simple Shell is a Console view for youareell.YouAreEll.
 public class SimpleShell {
 
 
@@ -66,25 +69,45 @@ public class SimpleShell {
                 // Specific Commands.
 
                 // ids
-                if (list.contains("ids")) {
+                if (list.contains("ids") && list.size() == 1) {
                     String results = webber.get_ids();
                     SimpleShell.prettyPrint(results);
                     continue;
                 }
 
+                if (list.contains("ids") && list.size() == 3) {
+                    Id id = new Id ("-", list.get(1), list.get(2));
+                    IdController j = new IdController();
+                    j.postId(id);
+                    SimpleShell.prettyPrint("id posted");
+                    continue;
+                }
+
                 // messages
                 if (list.contains("messages") && list.size() == 1) {
-
-                } if (list.contains("messages")) {
                     String results = webber.get_messages();
                     SimpleShell.prettyPrint(results);
                     continue;
+                } if (list.contains("messages") && list.size() == 2) {
+
                 }
                 // you need to add a bunch more.
                 if (list.contains("send") && list.contains("to")) {
-                    //do stuff
+                    if (list.size() != 5) continue;
+                    MessageController m = new MessageController();
+                    IdController j = new IdController();
+                    Id toId = j.findId(list.get(1));
+                    Id fromId = j.findId(list.get(3));
+                    Message msg = new Message("-", "-", list.get(1), list.get(3), list.get(2));
+
                 }
                 if (list.contains("send")) {
+                    MessageController m = new MessageController();
+
+                    Message msg = new Message("-", "-", list.get(1), list.get(3), list.get(4));
+                    Id toId = new Id("-", "", "");
+                    Id fromId = new Id ("-", "", "");
+                    m.postMessage(toId, fromId, msg);
                     //do stuff
                 }
 

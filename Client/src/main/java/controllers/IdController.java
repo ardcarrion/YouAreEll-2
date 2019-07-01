@@ -2,15 +2,20 @@ package controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import models.Id;
+
+import static java.util.stream.Collectors.toList;
 
 public class IdController {
     Id myId;
     private TransactionController tc;
 
     public IdController() {
-        this.myId = new Id("-", "Foo", "foobar2");
         this.tc = new TransactionController();
     }
 
@@ -24,17 +29,38 @@ public class IdController {
         return new ArrayList(tc.getIds());
     }
 
-    public Id postId(Id id) {
+    public Id postId(Id newId) {
+        String name = newId.getName();
+        Id foundId = findId(newId.getGithub());
+        if (foundId != null) {
+            foundId.setName(name);
+            return putId(foundId);
+        }
         try {
-            tc.postResponse("/ids");
+            tc.postResponse("/ids", newId);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return this.myId;
+        return newId;
+    }
+
+    public Id findId(String githubId) {
+        ArrayList<Id> ids = getIds();
+        return findId(githubId, ids);
+    }
+
+    public Id findId(String githubId, ArrayList<Id> ids) {
+        List<Id> foundId = ids.stream().filter(temp -> temp.getGithub().equals(githubId)).collect(toList());
+        return (foundId.size() == 0) ? null : foundId.get(0);
     }
 
     public Id putId(Id id) {
-        return null;
+        try {
+            tc.putResponse("/ids", id);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
  
 }

@@ -13,10 +13,14 @@ import models.Message;
 public class MessageController {
 
     private HashSet<Message> messagesSeen;
+    private TransactionController tc;
+    public MessageController() {
+        this.messagesSeen = new HashSet<>();
+        tc = new TransactionController();
+    }
     // why a HashSet??
 
     public ArrayList<Message> getMessages() {
-        TransactionController tc = new TransactionController();
         try {
             tc.getResponse("/messages");
         } catch (IOException e) {
@@ -26,7 +30,6 @@ public class MessageController {
     }
 
     public ArrayList<Message> getMessagesForId(Id Id) {
-        TransactionController tc = new TransactionController();
         try {
             tc.getResponse("/" + Id.getGithubId() + "/messages");
         } catch (IOException e) {
@@ -34,15 +37,42 @@ public class MessageController {
         }
         return new ArrayList<>(tc.getListMessage());
     }
+
     public Message getMessageForSequence(String seq) {
-        return null;
+        try {
+            tc.getResponse("/ids" + "/messages/" + seq);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tc.getListMessage().get(0);
     }
+
     public ArrayList<Message> getMessagesFromFriend(Id myId, Id friendId) {
-        return null;
+        try {
+            tc.getResponse("/" + myId.getGithubId() + "/messages/" + friendId.getGithubId());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(tc.getListMessage());
     }
 
     public Message postMessage(Id myId, Id toId, Message msg) {
-        return null;
+
+        try {
+            tc.postResponse("/" + myId.getGithubId() + "/messages/" + toId.getGithubId(), msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
     }
- 
+
+    public Message postMessage(Id myId, Message msg) {
+
+        try {
+            tc.postResponse("/" + myId.getGithubId() + "/message", msg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return msg;
+    }
 }
